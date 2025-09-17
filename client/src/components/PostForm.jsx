@@ -11,6 +11,7 @@ const PostForm = ({uiTitle , uiBtnText , isEditMode}) => {
   const [ content , setContent ] = useState("");
   const [ imageUrl , setImageUrl ] = useState("");
   const [ editPostId , setEditPostId ] = useState("");
+  const [ authorId , setAuthorId ] = useState("");
   const params = useParams()
 
   const mm = {
@@ -48,6 +49,7 @@ const PostForm = ({uiTitle , uiBtnText , isEditMode}) => {
     setImageUrl(imageUrl)
     setContent(content)
     setEditPostId(_id)
+    setAuthorId(author)
   }
 
   useEffect(()=>{if(isEditMode){getOldData()}} , [])
@@ -61,6 +63,7 @@ const PostForm = ({uiTitle , uiBtnText , isEditMode}) => {
     fromData.append("imageUrl",imageUrl)
     fromData.append("content",content)
     fromData.append("post__id" , editPostId)
+    fromData.append("author_id" , authorId)
 
     const response = await fetch(fetchUrl , {
       method,

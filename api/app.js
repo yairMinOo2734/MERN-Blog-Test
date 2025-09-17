@@ -60,10 +60,14 @@ app.post("/login" , async(req , res)=>{
 
 app.get("/profile" , async(req , res)=>{
     const {token} = req.cookies;
-    jwt.verify(token,process.env.JWT_KEY,{},(err,userInfo)=>{
+    if(token){
+        jwt.verify(token,process.env.JWT_KEY,{},(err,userInfo)=>{
         if(err) throw err;
-        res.json(userInfo)
+        return res.status(200).json(userInfo)
     })
+    }else{
+        res.status(401).json({message : "not auth"})
+    }
 })
 
 app.post("/logout" , async(req , res)=>{
@@ -125,16 +129,20 @@ app.put('/edit-post' , async(req , res) => {
 
 if(token){
     jwt.verify(token,process.env.JWT_KEY,{},async(err , info)=>{
-        if(err){
+if(err){
             return res.status(401).json({message: "user not auth."})
         }
-        const { title , content , imageUrl , post__id } = req.body;
-        const postDoc = await Post.findById(post__id);
+        const { title , content , imageUrl , post__id , author_id } = req.body;
+         const postDoc = await Post.findById(post__id);
+        if( author_id === info.user_id ){
         postDoc.title = title;
         postDoc.imageUrl = imageUrl;
         postDoc.content = content;
         postDoc.save();
-        res.status(200).json(postDoc)
+        // return res.status(200).json(postDoc)
+        }
+            res.status(200).json("your not post owner")
+        
     })
 }else{
     res.status(401).json({message : "user not auth."})
@@ -145,10 +153,25 @@ if(token){
 //Delete Post
 
 app.delete("/post-delete/:id" , async(req ,res) => {
-    const {id} = req.params;
-    await Post.findByIdAndDelete(id);
-    res.status(200).json({message : "Post deleted successfully"})
-})
+    const { token } = req.cookies;
+    
+if(token){
+    jwt.verify(token,process.env.JWT_KEY,{},async(err , info)=>{
+    if(err){
+            return res.status(401).json({message: "user not auth."})
+        }
+        const {id} = req.params;
+        const { author_id } = req.body;
+
+        if(author_id === info.user_id){
+              await Post.findByIdAndDelete(id);
+        }
+            res.status(200).json("Delte Post")
+    })
+}else{
+    res.status(401).json({message : "user not auth."})
+}
+}) 
 
 app.listen(8080);
 

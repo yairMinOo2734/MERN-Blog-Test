@@ -1,4 +1,4 @@
-import { createBrowserRouter , RouterProvider } from "react-router-dom"
+import { createBrowserRouter , RouterProvider} from "react-router-dom"
 import Main from "./layout/Main"
 import AuthPage from "./pages/AuthPage"
 import HomePage from "./pages/HomePage"
@@ -6,6 +6,7 @@ import DetailPage from "./pages/DetailPage"
 import EditPage from "./pages/EditPage"
 import CreatePage from "./pages/CreatePage"
 import { UserContextProvider } from "../UserContext"
+import {checkLogin} from "./utilsone/checklogin"
 
 const App = () => {
 
@@ -27,11 +28,13 @@ const App = () => {
       },
       {
         path : "/post-create" ,
-        element : <CreatePage/>
+        element : <CreatePage/>,
+        loader : checkLogin
       },
       {
         path : "post-edit/:id" ,
-        element : <EditPage/>
+        element : <EditPage/>,
+        loader : checkLogin
       }
     ]
   }])

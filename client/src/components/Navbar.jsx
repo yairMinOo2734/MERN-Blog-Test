@@ -11,8 +11,12 @@ const Navbar = () => {
     const response = await fetch(`${import.meta.env.VITE_URL}/profile` , {
       credentials : "include",
     });
+      if(response.ok){
       const userData = await response.json();
       setUserInfo(userData)
+      }else{
+      setUserInfo(null)  
+      }
   }
 
   const logout = async() => {
@@ -27,6 +31,7 @@ const Navbar = () => {
   return (
     <nav className='flex items-center justify-between p-10 2xl:px-96'>
         <Link to={"/"} className='font-bold text-2xl uppercase'>Blog.io</Link>
+<div>
     {
       userInfo? 
         <div className='flex items-center gap-2'>
@@ -39,6 +44,15 @@ const Navbar = () => {
             <Link to={"/auth?mode=register"} className='px-3 py-1 font-medium text-lg border-2 border-black bg-black text-white'>register</Link>
         </div>
     }
+    {
+      userInfo?
+     <div className="my-4 border-black border-2 w-55 text-center" >
+      <p>{userInfo? "Log in as " + userInfo.username : ""}</p>
+    </div>
+    :
+    ""
+    }
+</div>
     </nav>
   )
 }
