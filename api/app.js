@@ -11,6 +11,8 @@ const upload = multer()
 const User = require("./models/User")
 const Post = require("./models/Post")
 
+const PORT = process.env.PORT || 8080;
+
 const app = express();
 
 app.use(cors({credentials : true , origin:"http://localhost:5173"}))
@@ -173,5 +175,5 @@ if(token){
 }
 }) 
 
-app.listen(8080);
+app.listen(PORT);
 
