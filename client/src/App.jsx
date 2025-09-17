@@ -5,6 +5,7 @@ import HomePage from "./pages/HomePage"
 import DetailPage from "./pages/DetailPage"
 import EditPage from "./pages/EditPage"
 import CreatePage from "./pages/CreatePage"
+import { UserContextProvider } from "../UserContext"
 
 const App = () => {
 
@@ -36,7 +37,9 @@ const App = () => {
   }])
 
   return (
-    <RouterProvider router={router} />
+    <UserContextProvider>
+      <RouterProvider router={router} />
+    </UserContextProvider>
   )
 }
 

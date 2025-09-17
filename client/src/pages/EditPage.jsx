@@ -3,7 +3,7 @@ import PostForm from '../components/PostForm'
 
 const EditPage = () => {
   return (
-    <PostForm uiTitle={"Edit your post here"} uiBtnText={"Update Post"} />
+    <PostForm uiTitle={"Update Post"} uiBtnText={"Edit your post here"} isEditMode = {true} />
   )
 }
 

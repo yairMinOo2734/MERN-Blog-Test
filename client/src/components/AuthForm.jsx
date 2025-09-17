@@ -1,16 +1,36 @@
+import { useContext } from "react";
 import { useState } from "react";
-import { redirect, useSearchParams } from "react-router-dom"
+import { Navigate, useSearchParams } from "react-router-dom"
+import { UserContext } from "../../UserContext";
 
 const AuthForm = () => {
 
   const [ username , setusername ] = useState();
   const [ password , setpassword ] = useState();
+  const [ redirect , setRedriect ] = useState(false);
+  const {setUserInfo} = useContext(UserContext)
 
-  const [ searchParams ] = useSearchParams();
+  const [ searchParams , setSearchParams ] = useSearchParams();
 
   const isLoginMode = searchParams.get("mode") === "login";
 
-  const login = () => {}
+  const login = async() => {
+    const response = await fetch(`${import.meta.env.VITE_URL}/login`,{
+      method: "POST",
+      body: JSON.stringify({ username , password }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials : 'include'
+    });
+    if(response.ok) {
+      const userData = await response.json();
+      setUserInfo(userData);
+      setRedriect(true);
+    }else{
+      alert("Wrong user ");
+    }
+  }
 
   const register = async() => {
     const response = await fetch(`${import.meta.env.VITE_URL}/register`,{
@@ -21,7 +41,7 @@ const AuthForm = () => {
       }
     })
     if(response.ok){
-      redirect("/auth?mode=login");
+      setSearchParams("mode=login")
     }else{
       alert("registration failed")
     }
@@ -35,6 +55,10 @@ const AuthForm = () => {
     }else{
       register()
     }
+  }
+
+  if(redirect){
+    return <Navigate to={"/"} />
   }
 
   return (
